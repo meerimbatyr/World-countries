@@ -1,9 +1,8 @@
 import "./App.css";
 
 import React, { Component } from "react";
-import Countries from "./components/Countries";
 import data from "./dummiecountries";
-import { Pagination } from "reactstrap";
+import PaginationWrapper from "./components/Pagination";
 
 class App extends Component {
   constructor() {
@@ -19,23 +18,28 @@ class App extends Component {
   };
 
   fetchDummieData = () => {
-    this.setState({ countries: data });
+    this.setState({ ...this.state, countries: data });
   };
   componentDidMount() {
-    this.fetchDummieData();
+    this.fetchData();
+    // this.fetchDummieData();
   }
   render() {
     const propPagination = {
       numPages: this.state.numPages,
-      contries: this.state.countries,
+      countries: this.state.countries,
     };
-    console.log(propPagination);
+    // console.log(propPagination);
 
     return (
       <>
-        {/* <Pagination {...propPagination} /> */}
-
-        {/* <Countries /> */}
+        <div className="box">
+          <h2>WORLD COUNTRIES WITH REST API</h2>
+          <hr />
+          {this.state.countries.length > 0 && (
+            <PaginationWrapper {...propPagination} />
+          )}
+        </div>
       </>
     );
   }

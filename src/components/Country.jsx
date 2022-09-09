@@ -7,8 +7,10 @@ export default function Country({ country }) {
       <img src={flags.svg} alt="flag" />
       <p className="name">{name.common}</p>
       <p>
-        <span className={capital ? "capital" : "none"}>Cap:</span>
-        {capital ? capital[0] : "None"}
+        <span>Cap:</span>
+        <span className={capital ? "capital" : "none"}>
+          {capital ? capital[0] : "None"}
+        </span>
       </p>
       <p>
         <span>Pop:</span>

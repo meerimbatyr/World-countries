@@ -55,6 +55,11 @@ span,
   margin-left: 0.5rem;
 }
 
+.capital,
+.none {
+  font-weight: 400;
+}
+
 .none {
   color: red;
 }
