@@ -17,35 +17,52 @@ export default class PaginationWrapper extends React.Component {
     };
   }
 
-  updateCountriesPerPage = (currentPage, itemsPerPage) => {
-    const { countries } = this.state;
+  updateCountriesPerPage = (currentPage) => {
+    const { countries, itemsPerPage } = this.state;
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const countriesPerPage = countries.slice(startIndex, endIndex);
-    this.setState((prev) => ({ ...prev, countriesPerPage }));
+    this.setState((prev) => ({
+      ...prev,
+      countriesPerPage,
+      currentPage,
+    }));
   };
 
-  setCurrentPage = (newCurrentPage) => {
-    const { maxPages, itemsPerPage } = this.state;
-    if (newCurrentPage < 1 || newCurrentPage > maxPages) return;
-    this.setState({ ...this.state, currentPage: newCurrentPage });
-    this.updateCountriesPerPage(newCurrentPage, itemsPerPage);
-  };
+  // setCurrentPage = (newCurrentPage) => {
+  //   const { maxPages, itemsPerPage } = this.state;
+  //   if (newCurrentPage < 1 || newCurrentPage > maxPages) return;
+  //   this.setState({ ...this.state, currentPage: newCurrentPage });
+  //   this.updateCountriesPerPage(newCurrentPage, itemsPerPage);
+  // };
 
   componentDidMount() {
-    this.setCurrentPage(1);
+    this.updateCountriesPerPage(1);
   }
+
+  handleFirstPage = () => {
+    this.updateCountriesPerPage(1);
+  };
 
   handlePrevPage = () => {
     const { currentPage } = this.state;
     const newCurrentPage = currentPage - 1;
-    this.setCurrentPage(newCurrentPage);
+    if (currentPage <= 1) return;
+    this.setState({ currentPage: newCurrentPage });
+    this.updateCountriesPerPage(newCurrentPage);
   };
 
   handleNextPage = () => {
-    const { currentPage } = this.state;
+    const { currentPage, maxPages } = this.state;
     const newCurrentPage = currentPage + 1;
-    this.setCurrentPage(newCurrentPage);
+    if (currentPage >= maxPages) return;
+    this.setState({ currentPage: newCurrentPage });
+    this.updateCountriesPerPage(newCurrentPage);
+  };
+
+  handleLastPage = () => {
+    const { maxPages } = this.state;
+    this.updateCountriesPerPage(maxPages);
   };
 
   render() {
@@ -58,7 +75,7 @@ export default class PaginationWrapper extends React.Component {
         <PaginationItem
           key={`${i}`}
           active={i === currentPage}
-          onClick={() => this.setCurrentPage(i)}
+          onClick={() => this.updateCountriesPerPage(i)}
         >
           <PaginationLink href="#">{i}</PaginationLink>
         </PaginationItem>
@@ -73,17 +90,29 @@ export default class PaginationWrapper extends React.Component {
           </h5>
           <div>
             <Pagination>
-              <PaginationItem onClick={() => this.setCurrentPage(1)}>
+              <PaginationItem
+                disabled={currentPage === 1}
+                onClick={this.handleFirstPage}
+              >
                 <PaginationLink first href="#" />
               </PaginationItem>
-              <PaginationItem onClick={this.handlePrevPage}>
+              <PaginationItem
+                disabled={currentPage === 1}
+                onClick={this.handlePrevPage}
+              >
                 <PaginationLink href="#" previous />
               </PaginationItem>
               {arrayPages}
-              <PaginationItem onClick={this.handleNextPage}>
+              <PaginationItem
+                disabled={currentPage === maxPages}
+                onClick={this.handleNextPage}
+              >
                 <PaginationLink href="#" next />
               </PaginationItem>
-              <PaginationItem onClick={() => this.setCurrentPage(maxPages)}>
+              <PaginationItem
+                disabled={currentPage === maxPages}
+                onClick={this.handleLastPage}
+              >
                 <PaginationLink href="#" last />
               </PaginationItem>
             </Pagination>
@@ -91,7 +120,7 @@ export default class PaginationWrapper extends React.Component {
         </div>
         <div className="wrapper">
           {countriesPerPage.map((country, index) => {
-            return <Country country={country} />;
+            return <Country country={country} key={index} />;
           })}
         </div>
       </>

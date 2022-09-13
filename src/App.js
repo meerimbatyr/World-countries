@@ -17,12 +17,8 @@ class App extends Component {
     this.setState({ countries: data });
   };
 
-  fetchDummieData = () => {
-    this.setState({ ...this.state, countries: data });
-  };
   componentDidMount() {
     this.fetchData();
-    // this.fetchDummieData();
   }
   render() {
     const propPagination = {

@@ -6,5 +6,3 @@
 ## Deployed on surge
 
 https://honorable-porter.surge.sh/#
-
-image.png
